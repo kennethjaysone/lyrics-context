@@ -2,17 +2,36 @@ import React, { Component } from "react";
 
 import { Consumer } from "../../context";
 
+import Spinner from "../layouts/Spinner";
+import Track from "../tracks/Track";
+
 class Tracks extends Component {
   render() {
     return (
       <Consumer>
         {value => {
-          console.log(value);
-          return (
-            <div>
-              <h1>Tracks</h1>
-            </div>
-          );
+          //console.log(value);
+
+          const { track_list, heading } = value;
+
+          console.log(track_list);
+
+          if (track_list.length === 0 || track_list === undefined) {
+            return <Spinner />;
+          } else {
+            return (
+              <React.Fragment>
+                <h3 className="text-center mb-4">{heading}</h3>
+                <div className="row">
+                  {track_list.map(item => {
+                    return (
+                      <Track key={item.track.track_id} track={item.track} />
+                    );
+                  })}
+                </div>
+              </React.Fragment>
+            );
+          }
         }}
       </Consumer>
     );
