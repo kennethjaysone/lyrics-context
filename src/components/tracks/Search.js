@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Consumer } from "../../context";
+import axios from "axios";
 
 class Search extends Component {
   state = {
@@ -10,6 +11,27 @@ class Search extends Component {
     this.setState({
       [event.target.name]: event.target.value
     });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+
+    console.log("awd");
+    //track.search?q_artist=justin bieber&page_size=3&page=1&s_track_rating=desc
+    axios
+      .get(
+        `https://cors-anywhere.herokuapp.com/https://api.musixmatch.com/ws/1.1/track.search?q_track=${
+          this.state.trackTitle
+        }&page_size=10&page=1&s_track_rating=desc&apikey=${
+          process.env.REACT_APP_MM_KEY
+        }`
+      )
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
@@ -24,7 +46,7 @@ class Search extends Component {
 
               <p className="lead text-center">Get the lyrics for any song</p>
 
-              <form>
+              <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                   <input
                     type="text"
