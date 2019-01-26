@@ -13,10 +13,9 @@ class Search extends Component {
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (dispatch, event) => {
     event.preventDefault();
 
-    console.log("awd");
     //track.search?q_artist=justin bieber&page_size=3&page=1&s_track_rating=desc
     axios
       .get(
@@ -28,6 +27,11 @@ class Search extends Component {
       )
       .then(res => {
         console.log(res);
+        dispatch({
+          type: "SEARCH_TRACKS",
+          payload: res.data.message.body.track_list
+        });
+        this.setState({ trackTitle: "" });
       })
       .catch(error => {
         console.log(error);
@@ -38,6 +42,7 @@ class Search extends Component {
     return (
       <Consumer>
         {value => {
+          const { dispatch } = value;
           return (
             <div className="card card-body mb-4 p-4">
               <h1 className="display-4 text-center">
@@ -45,8 +50,12 @@ class Search extends Component {
               </h1>
 
               <p className="lead text-center">Get the lyrics for any song</p>
-
-              <form onSubmit={this.handleSubmit}>
+              {/* 
+              
+                https://reactjs.org/docs/handling-events.html 
+                
+              */}
+              <form onSubmit={this.handleSubmit.bind(this, dispatch)}>
                 <div className="form-group">
                   <input
                     type="text"
